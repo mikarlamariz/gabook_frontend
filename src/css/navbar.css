@@ -1,0 +1,13 @@
+.navbar {
+    background-color: #A450CB;
+}
+
+#search-navbar {
+    background-color: #DFC1ED;
+}
+
+@media screen and (min-width: 1070px) {
+    #search-navbar {
+        width: 600px;
+    }
+}

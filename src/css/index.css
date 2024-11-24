@@ -1,0 +1,27 @@
+body {
+    background-color: #ECECEC;
+}
+
+.btn-gabook {
+    background-color: #A450CB;
+    border-color: #A450CB;
+}
+
+.btn-gabook:hover {
+    background-color: #9629c9 !important;
+    border-color: #9629c9;
+}
+
+.icon-with-click:hover {
+    cursor: pointer;
+}
+
+.btn-gabook-outline {
+    background-color: #A450CB;
+    border-color: white;
+}
+
+.btn-gabook-outline:hover{
+    background-color: #9629c9 !important;
+    border-color: white;
+}
