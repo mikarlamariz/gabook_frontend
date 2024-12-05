@@ -1,3 +1,5 @@
-.make-post {
-    
+button.disabled
+{
+    background-color: #ae6dcc !important;
+    border-color: #ae6dcc !important;
 }

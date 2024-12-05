@@ -2,6 +2,7 @@ import { Col, Container, Nav, Row } from "react-bootstrap";
 import NavbarTop from "../../components/navbar";
 
 import '../../css/library.css';
+import WithAuth from "../../Middlewares/withAuth";
 
 const Library = () => {
     return (
@@ -53,6 +54,7 @@ const Library = () => {
                         </Row>
                     </div>
 
+                 {/* transformar em componente */}
                     <div className="table-content align-items-center p-3">
                         <Row className=" mt-3">
                             <Col md={3}>
@@ -61,19 +63,12 @@ const Library = () => {
                             <Col md={4} className="d-flex align-items-center justify-content-center">
                                 <div className="text-center">
                                     <p className="m-0 text-center p-purple fw-semibold">A CASA NO MAR GERULEO</p>
-                                    <p>Tj Klune</p>
+                                    <p className="m-0">Tj Klune</p>
                                 </div>
                             </Col>
                             <Col md={4} className="d-flex align-items-center justify-content-center">
                                 <div>
                                     <p className="m-0 text-center p-purple fw-semibold">5/5</p>
-                                    <Row className="justify-content-center">
-                                        <Col className="col-auto"><img src="/icons/star_filled.png"></img></Col>
-                                        <Col className="col-auto"><img src="/icons/star_empty.png"></img></Col>
-                                        <Col className="col-auto"><img src="/icons/star_empty.png"></img></Col>
-                                        <Col className="col-auto"><img src="/icons/star_empty.png"></img></Col>
-                                        <Col className="col-auto"><img src="/icons/star_empty.png"></img></Col>
-                                    </Row>
                                 </div>
                             </Col>
                         </Row>
@@ -86,4 +81,4 @@ const Library = () => {
     )
 }
 
-export default Library;
+export default WithAuth(Library);

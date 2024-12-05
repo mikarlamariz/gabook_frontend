@@ -8,6 +8,7 @@ const BookSearch = ({ imgUrl, description, id }) => {
         if (text.length > limit) {
             return text.substring(0, limit) + '...';
         }
+        return text;
     }
 
     return (

@@ -1,6 +1,7 @@
 import { Container } from "react-bootstrap";
 import NavbarTop from "../../components/navbar";
 import BookSearch from "../../components/bookSearch";
+import WithAuth from "../../Middlewares/withAuth";
 
 const Books = () => {
     return (
@@ -29,4 +30,4 @@ const Books = () => {
     )
 }
 
-export default Books;
+export default WithAuth(Books);

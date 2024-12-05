@@ -6,6 +6,10 @@ import Posts from "./pages/book/posts";
 import ShowBook from "./pages/book/show";
 import Profile from "./pages/user/profile";
 import Library from "./pages/user/library";
+import Suap from "./pages/auth/suap";
+
+
+//as rotas retornam um componente.
 
 const router = createBrowserRouter([
     {
@@ -13,8 +17,12 @@ const router = createBrowserRouter([
         element: <Login />
     },
     {
+        path: "/suap",
+        element: <Suap />
+    },
+    {
         path: "/login",
-        element: <Login />
+        element: <Login /> 
     },
     {
         path: "/register",
