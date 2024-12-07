@@ -18,6 +18,9 @@ const MakePost = () => {
     const [sendingPost, setSendingPost] = useState(false);
 
     const token = localStorage.getItem('token');
+    const baseUrl = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}`
+
+    const profilePathImage = localStorage.getItem("userImage");
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema) // Resolver de validação com Yup
@@ -59,7 +62,7 @@ const MakePost = () => {
         <div className='bg-white p-3 rounded-3'>
             <Row className='d-flex justify-items-center'>
                 <Col className=' col-auto'>
-                    <img src="icons/user3.png" alt="user icon" />
+                    <img className='rounded-circle' src={  profilePathImage ? baseUrl + '/' + profilePathImage : "/icons/user3.png"} width={32} height={32} alt="user icon" />
                 </Col>
                 <Col className='col-auto'>
                     <p className='m-0'>Sobre que livro você está pensando?</p>
@@ -94,6 +97,7 @@ const MakePost = () => {
                 )}
 
                 <div className='d-flex justify-content-end'>
+                    <Button href='/books/create' className="mt-3 rounded-pill btn-gabook me-2">Criar livro</Button>
                     {sendingPost ? (
                         <Button disabled={sendingPost} type='submit' className={"mt-3 rounded-pill btn-gabook disabled"} ><Spinner size='sm' animation="border" role="status" /></Button>
                     ) : 

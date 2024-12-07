@@ -2,7 +2,7 @@ import { Button, Col, Row } from "react-bootstrap";
 
 import '../css/bookSearch.css';
 
-const BookSearch = ({ imgUrl, description, id }) => {
+const BookSearch = ({ title, imgUrl, description, id }) => {
 
     const truncateText = (text, limit) => {
         if (text.length > limit) {
@@ -18,9 +18,10 @@ const BookSearch = ({ imgUrl, description, id }) => {
                     <img src={imgUrl ? imgUrl : '/capa.jpg'} height={248}/>
                 </Col>
                 <Col lg={9}>
+                    <h2>{title}</h2>
                     <p>{truncateText(description, 210)}</p>
                     <div>
-                        <Button href="/books/1" className="rounded-pill btn-gabook">Ver livro</Button>
+                        <Button href={`/books/${id}`} className="rounded-pill btn-gabook">Ver livro</Button>
                     </div>
                 </Col>
             </Row>

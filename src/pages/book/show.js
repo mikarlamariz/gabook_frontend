@@ -5,12 +5,16 @@ import { useEffect, useState } from "react";
 import WithAuth from "../../Middlewares/withAuth";
 import GetById from "../../api/book/getById";
 import AddBookToLibrary from "../../api/book/addToLibrary";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import EvaluateBook from "../../api/book/evaluate";
 
 const ShowBook = () => {
     const [book, setBook] = useState({});
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
     const [loadingAddToLibrary, setLoadingAddToLibrary] = useState(false);
+    const [hoveredRating, setHoveredRating] = useState(null);
+    const [userRating, setUserRating] = useState(null);
 
     const token = localStorage.getItem('token');
 
@@ -23,6 +27,48 @@ const ShowBook = () => {
         return text;
     }
 
+    // const renderStars = (rating) => {
+    //     const stars = [];
+    //     for (let i = 1; i <= 5; i++) {
+    //         stars.push(i <= rating ? <FaStar key={i} color="gold" /> : <FaRegStar key={i} color="gold" />);
+    //     }
+    //     return stars;
+    // }
+
+    const renderStars = (rating) => {
+        const stars = [];
+        const ratingToDisplay = hoveredRating !== null ? hoveredRating : rating; // Verifica se há hover, caso contrário usa a avaliação atual
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <div
+                    key={i}
+                    onMouseEnter={() => setHoveredRating(i)} // Altera o estado de hover quando o mouse entra na estrela
+                    onMouseLeave={() => setHoveredRating(null)} // Reseta o estado de hover quando o mouse sai
+                    onClick={() => handleStarClick(i)} // Lida com o clique da estrela
+                >
+                    {i <= ratingToDisplay ? (
+                        <FaStar color="gold" />
+                    ) : (
+                        <FaRegStar color="gold" />
+                    )}
+                </div>
+            );
+        }
+        return stars;
+    }
+
+    const handleStarClick = async (rating) => {
+        try {
+            setUserRating(rating);
+
+            // Envia a avaliação para o servidor via requisição PUT ou POST
+            const response = await EvaluateBook(id, rating);
+            window.location.reload();
+        } catch (error) {
+            console.log("Erro ao enviar a avaliação:", error);
+        }
+    }
+
     const addBookToLibrary = () => {
         const AddToLibrary = async (token, id) => {
             try {
@@ -30,7 +76,7 @@ const ShowBook = () => {
                 const response = await AddBookToLibrary(token, id);
             } catch (err) {
                 console.log(err);
-            }finally{
+            } finally {
                 setLoadingAddToLibrary(false);
             }
         }
@@ -80,10 +126,15 @@ const ShowBook = () => {
                                         </Row>
                                         <Row className="mt-3">
                                             {loadingAddToLibrary ? (
-                                                <Button className="rounded-pill btn-gabook"><Spinner size="sm" animation="border" variant="info" /></Button>
+                                                <Button className="rounded-pill btn-gabook" disabled={true}><Spinner size="sm" animation="border" variant="info" /></Button>
                                             ) : (
-                                                <Button className="rounded-pill btn-gabook" onClick={addBookToLibrary}>Adicionar à biblioteca</Button>
+                                                <Button className="rounded-pill btn-gabook" disabled={book.isInMyLibrary} onClick={addBookToLibrary}>Adicionar à biblioteca</Button>
                                             )}
+                                        </Row>
+                                        <Row className="mt-3">
+                                            <div style={{ display: 'flex', justifyContent: 'center', gap: '5px' }}>
+                                                {renderStars(book.evaluation_average)}
+                                            </div>
                                         </Row>
                                     </div>
                                 </Col>

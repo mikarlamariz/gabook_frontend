@@ -5,6 +5,7 @@ import MakePost from "../../components/makePost";
 import WithAuth from "../../Middlewares/withAuth";
 import { useEffect, useState } from "react";
 import GetPostsByUser from "../../api/post/getPostsByUser";
+import Footer from "../../components/footer";
 
 const Posts = () => {
     const [posts, setPosts] = useState([]);
@@ -16,14 +17,13 @@ const Posts = () => {
 
     useEffect(() => {
         const getPosts = async () => {
-            try{
+            try {
                 const response = await GetPostsByUser(token);
                 console.log(response.data.data);
                 setPosts(response.data.data);
-            }catch(err)
-            {
+            } catch (err) {
                 console.log(err);
-            }finally{
+            } finally {
                 setLoadingPosts(false);
             }
         }
@@ -36,19 +36,19 @@ const Posts = () => {
         <>
             <NavbarTop />
 
-            <main>
-                <Container>
+            <main style={{height: '100vh'}}>
+                <Container className="my-5">
+                    <MakePost />
 
-                    <div className="my-5">
-                        <MakePost/>
-
-                        {loadingPosts ? (
-                            <div className="d-flex justify-content-center mt-5">
-                                <Spinner animation="border" variant="primary" />
-                            </div>
-                        ) :
+                    {loadingPosts ? (
+                        <div className="d-flex justify-content-center mt-5">
+                            <Spinner animation="border" variant="primary" />
+                        </div>
+                    ) :
                         (
+
                             posts.map(post => {
+
                                 return (
                                     <Post
                                         key={post.id}
@@ -57,20 +57,14 @@ const Posts = () => {
                                         imgUrl={`${baseUrl}/${post.book.cover}`}
                                         userImgUrl={`${baseUrl}/${post.user.profile_image}`}
                                         bookId={post.book.id}
-                                        id={post.book.id}
+                                        id={post.id}
+                                        iLiked={post.i_liked}
                                     />
                                 )
                             })
                         )
-                        }
 
-                        {/* <Post
-                            username="teste"
-                            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        /> */}
-                        
-                    </div>
-
+                    }
                 </Container>
             </main>
 

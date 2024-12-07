@@ -1,10 +1,72 @@
-import { Col, Container, Nav, Row } from "react-bootstrap";
+import { Col, Container, Nav, Row, Spinner } from "react-bootstrap";
 import NavbarTop from "../../components/navbar";
 
 import '../../css/library.css';
 import WithAuth from "../../Middlewares/withAuth";
+import { useEffect, useState } from "react";
+import GetUserBooks from "../../api/book/getUserBooks";
 
 const Library = () => {
+    const [myBooks, setMyBooks] = useState([]);
+    const [bkpBooks, setBkpBooks] = useState([]);
+    const [loadingBooks, setLoadingBooks] = useState(true);
+
+    const baseUrl = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}`;
+
+    useEffect(() => {
+        const getMyBooks = async () => {
+            try {
+                const response = await GetUserBooks();
+                setMyBooks(response.data.data);
+                setBkpBooks(response.data.data);
+            } catch (err) {
+                alert("Ocorreu um erro ao carregar os livros");
+                console.log(err);
+            } finally {
+                setLoadingBooks(false);
+            }
+        }
+
+        getMyBooks();
+    }, [])
+
+    const filterByStatus = (status) => {
+        const statuses = {
+            "todos": "todos",
+            "lidos": "Lido",
+            "lendo": "Lendo",
+            "quero_ler": "Quero Ler",
+            "abandonei": "Abandonado",
+            "relendo": "Relendo",
+        }
+
+        if (status === "todos")
+            setMyBooks(bkpBooks);
+        else
+            setMyBooks(bkpBooks.filter(b => b.book.status === statuses[status]));
+    }
+
+    const renderBook = (book) => {
+        return (
+            <Row key={book.book.id} className=" mt-3">
+                <Col md={3}>
+                    <img src={baseUrl + '/' + book.book.cover} onClick={() => window.location.href = `/books/${book.book.id}`} style={{ cursor: 'pointer' }} height={248} />
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-center">
+                    <div className="text-center">
+                        <p onClick={() => window.location.href = `/books/${book.book.id}`} style={{ cursor: 'pointer' }} className="m-0 text-center p-purple fw-semibold">{book.book.title}</p>
+                        <p className="m-0">{book.author.name}</p>
+                    </div>
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-center">
+                    <div>
+                        <p className="m-0 text-center p-purple fw-semibold">{book.book.evaluation_average}/5</p>
+                    </div>
+                </Col>
+            </Row>
+        )
+    }
+
     return (
         <>
             <NavbarTop />
@@ -18,24 +80,24 @@ const Library = () => {
 
                     <div>
 
-                        <Nav className="nav-dad-pill justify-content-center" variant="pills" defaultActiveKey="link-1">
+                        <Nav onSelect={filterByStatus} className="nav-dad-pill justify-content-center" variant="pills" defaultActiveKey="todos">
                             <Nav.Item >
-                                <Nav.Link className="rounded-start-pill  link-pill" eventKey="link-1">Todos</Nav.Link>
+                                <Nav.Link className="rounded-start-pill  link-pill" eventKey="todos">Todos</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link className="link-pill rounded-0" eventKey="link-2">Lidos</Nav.Link>
+                                <Nav.Link className="link-pill rounded-0" eventKey="lidos">Lidos</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link className="link-pill rounded-0" eventKey="link-3">Lendo</Nav.Link>
+                                <Nav.Link className="link-pill rounded-0" eventKey="lendo">Lendo</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link className="link-pill rounded-0" eventKey="link-4">Quero ler</Nav.Link>
+                                <Nav.Link className="link-pill rounded-0" eventKey="quero_ler">Quero ler</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link className="link-pill rounded-0" eventKey="link-5">Relendo</Nav.Link>
+                                <Nav.Link className="link-pill rounded-0" eventKey="relendo">Relendo</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link className="rounded-end-pill link-pill" eventKey="link-6">Abandonei</Nav.Link>
+                                <Nav.Link className="rounded-end-pill link-pill" eventKey="abandonei">Abandonei</Nav.Link>
                             </Nav.Item>
                         </Nav>
                     </div>
@@ -54,25 +116,19 @@ const Library = () => {
                         </Row>
                     </div>
 
-                 {/* transformar em componente */}
-                    <div className="table-content align-items-center p-3">
-                        <Row className=" mt-3">
-                            <Col md={3}>
-                                <img src='/capa.jpg' height={248} />
-                            </Col>
-                            <Col md={4} className="d-flex align-items-center justify-content-center">
-                                <div className="text-center">
-                                    <p className="m-0 text-center p-purple fw-semibold">A CASA NO MAR GERULEO</p>
-                                    <p className="m-0">Tj Klune</p>
-                                </div>
-                            </Col>
-                            <Col md={4} className="d-flex align-items-center justify-content-center">
-                                <div>
-                                    <p className="m-0 text-center p-purple fw-semibold">5/5</p>
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
+                    {/* transformar em componente */}
+                    {loadingBooks ? (
+                        <div className="d-flex justify-content-center">
+                            <Spinner className="mt-5" animation="border" variant="primary" />
+                        </div>
+                    ) : (
+                        <div className="table-content align-items-center p-3">
+
+                            {myBooks.map((book) => renderBook(book))}
+
+                        </div>
+
+                    )}
 
                 </Container>
             </main>

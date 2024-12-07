@@ -1,17 +1,21 @@
-import { Navbar, Nav, Row } from "react-bootstrap";
+import { Navbar, Nav, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import '../css/navbar.css';
+import { useState } from "react";
 
 const NavbarTop = () => {
     const navigate = useNavigate()
+
+    const [searchValue, setSearchValue] = useState("");
 
     const baseUrl = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}`;
 
     const profilePathImage = localStorage.getItem("userImage");
 
-    const handleInputChange = () => {
-        navigate("/books");
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        window.location.href = `/books/search?search=${searchValue.target.value}`;
     };
 
     return (
@@ -22,7 +26,9 @@ const NavbarTop = () => {
                 </Navbar.Brand>
                 <div className="mx-auto">
                     <Nav className="justify-content-center">
-                        <input type="text" className="form-control rounded-pill" id="search-navbar" placeholder="Pesquise" onChange={handleInputChange} />
+                        <Form onSubmit={handleFormSubmit}>
+                            <input type="text" onChange={setSearchValue} className="form-control rounded-pill" id="search-navbar" placeholder="Pesquise" />
+                        </Form>
                     </Nav>
                 </div>
                 <Nav className="justify-content-center">

@@ -41,7 +41,7 @@ const Login = () => {
                         console.log(image);
 
                         if (image.length > 0)
-                            localStorage.setItem('userImage', image.image);
+                            localStorage.setItem('userImage', image);
                     }catch(err) {}
 
                     window.location.href = '/posts';
